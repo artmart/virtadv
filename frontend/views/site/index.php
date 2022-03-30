@@ -1,8 +1,11 @@
 <?php
 use backend\models\Endofdayfigures;
 
-$this->title = 'Input data';
+$this->title = 'Home';
 
+echo "Virtual Advisor's Calculator will be here";
+
+ /*
 $user_id = Yii::$app->user->id;
 $today = date("Y-m-d h:i:s");
 $sql = "SELECT t.*, tr.user_id, tr.timestamp, tr.response, tr.note FROM tasks t
@@ -142,7 +145,7 @@ if(isset($_REQUEST['active_tab'])){$active_tab = $_REQUEST['active_tab'];}
         </div>    
         <input type="text" id="<?=$task['id']?>" name="closing_note[<?=$task['id']?>]" value="<?=$task['note']?>" placeholder="Note" class="col-sm-4 hidd">
         </div> 
-        <?php //} }  */?>
+        <?php //} }  *//*?>
         <hr />
           <button type="submit" class="btn btn-primary" onclick="closingsave()">Submit</button> 
           <hr />
@@ -291,3 +294,5 @@ $.ajax({
     }
 }
 </script>
+
+*/ ?>

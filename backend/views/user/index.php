@@ -31,10 +31,10 @@ $this->params['breadcrumbs'][] = $this->title;
             //'user_group',
             [
                 'attribute' => 'user_group',
-                'filter'=>['1' => 'Administrator', '2' => 'Staff', '3' => 'Manager'],
+                'filter'=>['1' => 'Administrator', '2' => 'User'],
                 'format' => 'raw',
                 'value'=>function($data) {
-                    $arr = ['1' => 'Administrator', '2' => 'Staff', '3' => 'Manager'];
+                    $arr = ['1' => 'Administrator', '2' => 'User'];
                     return $arr[$data->user_group];
                     },  
             ],

@@ -88,3 +88,8 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+
+.bg-dark {
+  background-color: #0471af !important;
+}

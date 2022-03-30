@@ -32,17 +32,16 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site']],
-        //['label' => 'Users', 'url' => ['/user']],
-        ['label' => 'Tasks', 'url' => ['/tasks']],
-        ['label' => 'End of Day Figures', 'url' => ['/endofdayfigures']],
+        ['label' => 'Users', 'url' => ['/user']],
         
+        /*
         ['label' => 'Manage',
             'items' => [
                  ['label' => 'Users', 'url' => '/admin/user'],
                  ['label' => 'Suppliers', 'url' => '/admin/suppliers'],
                  ['label' => 'Productgroups', 'url' => '/admin/productgroups'],     
             ],
-        ],
+        ],*/
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];

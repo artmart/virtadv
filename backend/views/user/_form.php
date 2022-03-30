@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'password')->passwordInput() ?>
     <?= $form->field($model, 'status')->dropDownList(['10' => 'Active', '9' =>'Inactive'] /*, ['prompt'=>'- Select -']*/); ?>
-    <?= $form->field($model, 'user_group')->dropDownList(['1' => 'Administrator', '2' => 'Staff', '3' => 'Manager'] /*, ['prompt'=>'- Select -']*/); ?>
+    <?= $form->field($model, 'user_group')->dropDownList(['1' => 'Administrator', '2' => 'User'] /*, ['prompt'=>'- Select -']*/); ?>
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
