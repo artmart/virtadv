@@ -67,7 +67,7 @@ a.desc:after {
 /* align the logout "link" (button in form) of the navbar */
 .nav li > form > button.logout {
     padding-top: 7px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(13, 12, 12, 0.5);
 }
 
 @media(max-width:767px) {
@@ -92,4 +92,16 @@ a.desc:after {
 
 .bg-dark {
   background-color: #0471af !important;
+}
+
+.btn-green{
+	background-color: #80AE4F !important;
+}
+
+.navbar-light{
+	border-bottom: solid 2px #80AE4F;
+}
+
+.help-block{
+	color: red;
 }
