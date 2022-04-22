@@ -4,18 +4,19 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use frontend\models\Calculations;
 
-$this->title = 'Calculations';
+$this->title = 'Saved Calculations';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="calculations-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Calculations', ['create'], ['class' => 'btn btn-success']) ?>
+<div class="container d-inline-block">
+    <h1 class="float-left"><?= Html::encode($this->title) ?></h1>
+    <p class="float-right">
+        <?= Html::a('New Calculation', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+</div>
+<hr />
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -41,7 +42,5 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-
     <?php Pjax::end(); ?>
-
 </div>
