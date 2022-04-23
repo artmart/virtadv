@@ -69,7 +69,7 @@
           }
         }
 
-        calculateStatistics();
+        calculateStatistics($statistics, $calculation);
       }
       
      function calculateMonths($calculation, $years) {
@@ -85,17 +85,17 @@
         $statistics['actualAnnualizedYield'] = 0;
         $statistics['finalNetValue'] = 0;
         $statistics['totalAnnualizedYield'] = 0;
-        $statistics['earnedIncome'] = 0;
+        $statistics['earnedIncome'] = $calculation['income'];
         $statistics['lowestPrincipal'] = $calculation['value'];
 
         // iterate over years, workout monthly math and reduce total worth
         foreach($years as $index=>$year){
           $year['geometricAverage'] = (1 + ($year['return'] / 100));
           $statistics['earnedIncome'] += ($years[($index == 0 ? 0 : $index -1)]['eoy'] < $years[($index == 0 ? 0 : $index -1)]['income'] ? $years[($index == 0 ? 0 : $index -1)]['eoy'] : $year['income']);
-          $year['charges'] = null;
-          $year['fees'] = null;
-          $year['boy'] = null;
-          $year['eoy'] = null;
+          $year['charges'] = 0;
+          $year['fees'] = 0;
+          $year['boy'] = 0;
+          $year['eoy'] = 0;
           $year['toggled'] = false;
           $year['months'] = [];
           $previousRemaining = ( ($index==0||!$years[$index - 1]) ? $calculation['value'] : $years[$index - 1]['months'][11]['remaining']);//?????
@@ -211,25 +211,8 @@ $(document).ready(function() {
 } );
 
 </script>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    <?php    
-        
-        
-        
-        
-        
-        
-        
-        
+   
+<?php    
       }
       
      function calculateStatistics($statistics, $calculation){
@@ -240,7 +223,34 @@ $(document).ready(function() {
         $statistics['totalAnnualizedYield'] = (pow(($statistics['totalAnnualizedYield'] + $statistics['earnedIncome']) / $calculation['value'], (1 / $calculation['years'])) - 1) * 100;
         $statistics['finalNetValue'] = $statistics['finalNetValue'] + $statistics['earnedIncome'];
         
-        return $statistics;
+        ?>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover table-striped" style="width: 100% !important;">            
+            <tbody>
+            
+            <tr>
+               <th scope="row">Avg. Annualized Index Return </th><td><?= number_format($statistics['averageReturn'], 2) ?></td>
+               <th scope="row">Lowest Principal </th><td><?= number_format($statistics['lowestPrincipal'], 2) ?></td>
+            </tr>
+            <tr>
+               <th scope="row">Annualized Return on Principal</th><td><?= number_format($statistics['actualAnnualizedYield'], 2) ?></td>
+               <th scope="row">Annualized Return on Economic Output </th><td><?= number_format($statistics['totalAnnualizedYield'], 2) ?></td>
+            </tr>
+            <tr>
+               <th scope="row">Net Economic Output </th><td><?= number_format($statistics['finalNetValue'], 2) ?></td>
+               <th scope="row">Cumulative Withdrawals </th><td><?= number_format($statistics['earnedIncome'], 2) ?></td>
+            </tr>
+            </tbody>
+            </table>
+        </div>
+        
+        <?php
+        
+        
+        
+        
+        
+        //return $statistics;
       }
       
     function  doTheMath($calculation, $showMarketHistory, $marketHistory){
