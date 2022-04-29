@@ -6,7 +6,7 @@ $this->title = 'Login';
 //$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
-<div class="mt-5 offset-lg-3 col-lg-6">
+<div class="mt-5 offset-lg-1 col-lg-4 white-space">
     <h1><?= Html::encode($this->title) ?></h1>
     <p>Please fill out the following fields to login:</p>
     <div class="row">
@@ -21,7 +21,7 @@ $this->title = 'Login';
                 Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
             </div>
             <div class="form-group">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <?= Html::submitButton('Login', ['class' => 'btn btn-primary w-100', 'name' => 'login-button']) ?>
             </div>
             <?php ActiveForm::end(); ?>
         </div>

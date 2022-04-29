@@ -24,7 +24,7 @@ AppAsset::register($this);
 <header>
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => Html::img('/img/logo.jpg', ['alt' => Yii::$app->name, 'height'=>'40px']), //, height: 40px;
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-light fixed-top',
@@ -42,6 +42,17 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        
+        $menuItems[] =         [
+            'label' => strtoupper(substr(Yii::$app->user->identity->firstname, 0, 1) .substr(Yii::$app->user->identity->lastname, 0, 1)),
+            'items' => [
+                 ['label' => 'Logout', 'url' => '/site/logout'],
+                 //['label' => 'Level 1 - Dropdown B', 'url' => '#'],
+            ],
+        ];
+        
+       /* 
+        
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
             . Html::submitButton(
@@ -50,6 +61,7 @@ AppAsset::register($this);
             )
             . Html::endForm()
             . '</li>';
+            */
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav ml-auto'],
@@ -61,9 +73,7 @@ AppAsset::register($this);
 
 <main role="main" class="flex-shrink-0">
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+        <?= Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : []]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>
@@ -71,7 +81,11 @@ AppAsset::register($this);
 
 <footer class="footer mt-auto py-3 text-muted">
     <div class="container">
-        <p class="float-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+        <p class="float-left">Copyright &copy; <?= date('Y') ?> Wealth Pilots™ LLC. & Triple Threat Simulator™ All Rights Reserved </p>
+        <?php // Html::encode(Yii::$app->name) ?> <?php // date('Y') ?>
+        
+        
+        
         <?php /* <p class="float-right"><?= Yii::powered() ?></p> */ ?>
     </div>
 </footer>
