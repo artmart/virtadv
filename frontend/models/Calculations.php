@@ -35,7 +35,7 @@ class Calculations extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'reference_id'], 'required'],
+            [['user_id', 'reference_id', 'date'], 'required'],
             [['user_id', 'years_of_investment', 'annual_return_rate'], 'integer'],
             [['current_value', 'annual_withdrawal', 'management_fee'], 'number'],
             [['reference_id'], 'string', 'max' => 255],
@@ -57,6 +57,7 @@ class Calculations extends \yii\db\ActiveRecord
             'annual_return_rate' => 'Annual Return Rate',
             'annual_withdrawal' => 'Annual Withdrawal',
             'management_fee' => 'Management Fee',
+            'date' => 'Date',
         ];
     }
 

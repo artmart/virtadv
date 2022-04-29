@@ -8,7 +8,7 @@ use yii\widgets\ListView;
 use yii\widgets\Pjax;
 use frontend\models\Calculations;
 
-$this->title = 'Saved Calculations';
+$this->title = 'Dashboard';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="calculations-index">
@@ -16,21 +16,24 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php //Html::img('/img/dashboard.png', ['alt' => '', 'height'=>'400px']);?>
 
-<hr />
+    <h1 class="d-flex justify-content-center"><?= Html::encode($this->title) ?></h1>
 
-
-    <h1 class="float-left"><?= Html::encode($this->title) ?></h1>
-    <p class="float-right">
-        <?= Html::a('New Calculation', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 </div>
 <hr />
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+<h4 class="float-left">Recent Activity</h4>
+<table class="table table-striped table-success table-responsive-xl">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
     <?= ListView::widget([
         'dataProvider' => $dataProvider,
-        'layout' => "{pager}\n{items}\n{summary}",
+        
   /*  'itemView' => function ($model, $key, $index, $widget) {
         //return $this->render('_list_item',['model' => $model]);
 
@@ -46,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'prevPageLabel' => 'previous',
         'maxButtonCount' => 3,
     ],
+    'layout' =>"{items}\n{pager}", //\n{summary}
         //'filterModel' => $searchModel,
         //'tableOptions' => ['class' => 'table table-striped table-success table-responsive-xl'],
        /* 'columns' => [
@@ -68,5 +72,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],*/
     ]); ?>
+  </tbody>
+</table>
     <?php Pjax::end(); ?>
 </div>
+<hr />
+<p class="d-flex justify-content-center">
+    <?= Html::a('New Calculation', ['create'], ['class' => 'btn btn-success']) ?>
+</p>
