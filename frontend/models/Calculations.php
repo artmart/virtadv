@@ -51,7 +51,7 @@ class Calculations extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'reference_id' => 'Reference ID',
+            'reference_id' => 'Name', // 'Reference ID',
             'current_value' => 'Current Value',
             'years_of_investment' => 'Years Of Investment',
             'annual_return_rate' => 'Annual Return Rate',

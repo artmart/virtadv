@@ -1,86 +1,90 @@
 <link rel="stylesheet" type="text/css" href="/vendor/datatables/css/jquery.dataTables.min.css">
+<style>
+td {
+  text-align: center;
+}
 
+th {
+  text-align: center;
+}
+</style>
 <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
 
 <?php
-      function calculateMarketHistory($calculation, $years){
-        // reset worth to original income so we can subtract freely
-        $total['worth'] = $calculation['value'];
-        $total['remaining'] = $calculation['value'];
-
-        // reset statistics values to ensure it's always recalculated
-        $statistics['averageReturn'] = 0;
-        // default value is 1 because 0? anything is 0 ;)
-        $statistics['geometricAverage'] = 1;
-        $statistics['actualAnnualizedYield'] = 0;
-        $statistics['finalNetValue'] = 0;
-        $statistics['totalAnnualizedYield'] = 0;
-        $statistics['earnedIncome'] = 0;
-        $statistics['lowestPrincipal'] = $calculation['value'];
-
-        // iterate over years, workout monthly math and reduce total worth
-        foreach($years as $index=>$year){
-          $year['geometricAverage'] = (1 + ($year['return'] / 100));
-          $statistics['earnedIncome'] += ($years[($index == 0 ? 0 : $index -1)]['eoy'] < $years[($index == 0 ? 0 : $index -1)]['income'] ? $years[($index == 0 ? 0 : $index -1)]['eoy'] : $year['income']);
-          $year['charges'] = null;
-          $year['fees'] = null;
-          $year['boy'] = null;
-          $year['eoy'] = null;
-          $year['toggled'] = false;
-
-          // calculate statistics
-          $statistics['averageReturn'] += $year['return'];
-          $statistics['geometricAverage'] *= $year['geometricAverage'];
-
-          foreach($year['months'] as $month){
-            $calculatedValue = ((1 + $month['rate'] / 100) * $total['worth']) - $year['income'] / 12;
-            $charge = $month['rate'] / 100 * $calculatedValue;
-            $globalFee = $calculation['fee'] / 12 / 100;
-            $remaining = $calculatedValue - ($globalFee * $calculatedValue);
-            $monthlyCharge = $globalFee * $calculatedValue;
-            $month['income'] = $year['income'] / 12;
-            $month['fee'] = $globalFee;
-            $month['value'] = $calculatedValue;
-            $month['charge'] = ($monthlyCharge < 0 ? 0 : $monthlyCharge);
-            $month['remaining'] = remaining;
-            $statistics['lowestPrincipal'] = ($remaining < $statistics['lowestPrincipal'] ? $remaining : $statistics['lowestPrincipal']);
-            if($statistics['lowestPrincipal'] < 0) {
-              $statistics['lowestPrincipal'] = 0;
-            }
-            $total['worth'] = $remaining;
-            $total['remaining'] -= $remaining;
-            $year['charges'] += floatval($month['charge'], 4);
-          }
-
-          $year['boy'] = $years[$index - 1] ? $years[$index - 1][$months[11]['remaining']] : $calculation['value']; //????
-          $year['v'] += $year['charges'] + ($years[$index - 1] ? $years[$index - 1]['fees'] : null);
-          // last iteration will assign final net value
-          $year['eoy'] = $statistics['actualAnnualizedYield'] = $years[$index][$months[11]['remaining']]; //???????
-
-          $statistics['totalAnnualizedYield'] = $year['eoy'];
-          $statistics['finalNetValue'] = $year['eoy'];
-
-          if($year['eoy'] < 0) {
-            $year['eoy'] = $statistics['actualAnnualizedYield'] = 0;
-          }
-
-          if($year['boy'] < 0) {
-            $year['boy'] = 0;
-          }
+function calculateMarketHistory($calculation, $years){
+    //reset worth to original income so we can subtract freely
+    $total['worth'] = $calculation['value'];
+    $total['remaining'] = $calculation['value'];
+    
+    //reset statistics values to ensure it's always recalculated
+    $statistics['averageReturn'] = 0;
+    //default value is 1 because 0? anything is 0 ;)
+    $statistics['geometricAverage'] = 1;
+    $statistics['actualAnnualizedYield'] = 0;
+    $statistics['finalNetValue'] = 0;
+    $statistics['totalAnnualizedYield'] = 0;
+    $statistics['earnedIncome'] = 0;
+    $statistics['lowestPrincipal'] = $calculation['value'];
+    
+    // iterate over years, workout monthly math and reduce total worth
+    foreach($years as $index=>$year){
+      $year['geometricAverage'] = (1 + ($year['return'] / 100));
+      $statistics['earnedIncome'] += ($years[($index == 0 ? 0 : $index -1)]['eoy'] < $years[($index == 0 ? 0 : $index -1)]['income'] ? $years[($index == 0 ? 0 : $index -1)]['eoy'] : $year['income']);
+      $year['charges'] = null;
+      $year['fees'] = null;
+      $year['boy'] = null;
+      $year['eoy'] = null;
+      $year['toggled'] = false;
+    
+      // calculate statistics
+      $statistics['averageReturn'] += $year['return'];
+      $statistics['geometricAverage'] *= $year['geometricAverage'];
+    
+      foreach($year['months'] as $month){
+        $calculatedValue = ((1 + $month['rate'] / 100) * $total['worth']) - $year['income'] / 12;
+        $charge = $month['rate'] / 100 * $calculatedValue;
+        $globalFee = $calculation['fee'] / 12 / 100;
+        $remaining = $calculatedValue - ($globalFee * $calculatedValue);
+        $monthlyCharge = $globalFee * $calculatedValue;
+        $month['income'] = $year['income'] / 12;
+        $month['fee'] = $globalFee;
+        $month['value'] = $calculatedValue;
+        $month['charge'] = ($monthlyCharge < 0 ? 0 : $monthlyCharge);
+        $month['remaining'] = remaining;
+        $statistics['lowestPrincipal'] = ($remaining < $statistics['lowestPrincipal'] ? $remaining : $statistics['lowestPrincipal']);
+        if($statistics['lowestPrincipal'] < 0) {
+          $statistics['lowestPrincipal'] = 0;
         }
-
-        calculateStatistics($statistics, $calculation);
+        $total['worth'] = $remaining;
+        $total['remaining'] -= $remaining;
+        $year['charges'] += floatval($month['charge'], 4);
       }
+    
+      $year['boy'] = $years[$index - 1] ? $years[$index - 1][$months[11]['remaining']] : $calculation['value']; //????
+      $year['v'] += $year['charges'] + ($years[$index - 1] ? $years[$index - 1]['fees'] : null);
+      // last iteration will assign final net value
+      $year['eoy'] = $statistics['actualAnnualizedYield'] = $years[$index][$months[11]['remaining']]; //???????
+    
+      $statistics['totalAnnualizedYield'] = $year['eoy'];
+      $statistics['finalNetValue'] = $year['eoy'];
+    
+      if($year['eoy']<0){$year['eoy'] = $statistics['actualAnnualizedYield'] = 0;}
+    
+      if($year['boy']<0){$year['boy'] = 0;}
+    }
+    
+    calculateStatistics($statistics, $calculation);
+}
       
      function calculateMonths($calculation, $years) {
         $table2JsonData = [];
-        // reset worth to original income so we can subtract freely
+        //reset worth to original income so we can subtract freely
         $total['worth'] = $calculation['value'];
         $total['remaining'] = $calculation['value'];
 
-        // reset statistics values to ensure it's always recalculated
+        //reset statistics values to ensure it's always recalculated
         $statistics['averageReturn'] = 0;
-        // default value is 1 because 0? anything is 0 ;)
+        //default value is 1 because 0? anything is 0 ;)
         $statistics['geometricAverage'] = 1;
         $statistics['actualAnnualizedYield'] = 0;
         $statistics['finalNetValue'] = 0;
@@ -88,7 +92,7 @@
         $statistics['earnedIncome'] = $calculation['income'];
         $statistics['lowestPrincipal'] = $calculation['value'];
 
-        // iterate over years, workout monthly math and reduce total worth
+        //iterate over years, workout monthly math and reduce total worth
         foreach($years as $index=>$year){
           $year['geometricAverage'] = (1 + ($year['return'] / 100));
           $statistics['earnedIncome'] += ($years[($index == 0 ? 0 : $index -1)]['eoy'] < $years[($index == 0 ? 0 : $index -1)]['income'] ? $years[($index == 0 ? 0 : $index -1)]['eoy'] : $year['income']);
@@ -101,12 +105,12 @@
           $previousRemaining = ( ($index==0||!$years[$index - 1]) ? $calculation['value'] : $years[$index - 1]['months'][11]['remaining']);//?????
           $fees = 0;
 
-          // calculate statistics
+          //calculate statistics
           $statistics['averageReturn'] += $year['return'];
           $statistics['geometricAverage'] *= $year['geometricAverage'];
 
-          // dynamic monthly values
-          for($j = 1; $j < 13; $j++){
+          //dynamic monthly values
+          for($j = 1; $j<13; $j++){
             $month = [];
             $calculatedValue = ((1 + $year['return'] / 12 / 100) * $total['worth']) - $year['income'] / 12;
             $charge = $calculation['fee'] / 12 / 100 * $calculatedValue;
@@ -164,7 +168,7 @@
           }
            $years[$index] = $year;
 
-           $table2JsonData[] = [$year['year'], $year['return'], $year['income'], number_format($year['charges'], 2), number_format($year['boy'], 2), number_format($year['eoy'], 2), number_format($year['fees'], 2)]; 
+           $table2JsonData[] = [$year['year'], $year['return'].'%', '$'.number_format($year['income']), '$'.number_format($year['charges'], 2), '$'.number_format($year['boy'], 2), '$'.number_format($year['eoy'], 2), '$'.number_format($year['fees'], 2)]; 
                         
 
           $statistics['totalAnnualizedYield'] = $year['eoy'];
@@ -178,26 +182,25 @@
         
 <div class="table-responsive">
     <table id="calculations" class="table table-sm table-hover table-striped display" style="width: 100% !important;">
-    <thead>
-    <tr>
-      <th scope="col">Year</th>
-      <th scope="col">Annual Return</th>
-      <th scope="col">Annual Withdrawal</th>
-      <th scope="col">Mgmt. Fee</th>
-      <th scope="col">Net Value BOY</th>
-      <th scope="col">Net Value EOY</th>
-      <th scope="col">Cumulative Fees </th>
-    </tr>
-    </thead>
-    
+        <thead>
+        <tr>
+          <th scope="col">Year</th>
+          <th scope="col">Annual Return</th>
+          <th scope="col">Annual Withdrawal</th>
+          <th scope="col">Mgmt. Fee</th>
+          <th scope="col">Net Value BOY</th>
+          <th scope="col">Net Value EOY</th>
+          <th scope="col">Cumulative Fees </th>
+        </tr>
+        </thead>
     <tbody>
     </tbody>
     </table>
 </div>
 
 <script>
-$(document).ready(function() {
-    $('#calculations').DataTable( {
+$(document).ready(function(){
+    $('#calculations').DataTable({
         data: <?php echo json_encode($table2JsonData); ?>,
         responsive: true,
         "ordering": false,
@@ -207,7 +210,7 @@ $(document).ready(function() {
         //"processing": true,
         //"serverSide": true,
        // "ajax": "/site/homechartajax"
-    } );
+    });
 } );
 
 </script>
@@ -227,18 +230,17 @@ $(document).ready(function() {
         <div class="table-responsive">
             <table class="table table-sm table-hover table-striped" style="width: 100% !important;">            
             <tbody>
-            
             <tr>
-               <th scope="row">Avg. Annualized Index Return </th><td><?= number_format($statistics['averageReturn'], 2) ?></td>
-               <th scope="row">Lowest Principal </th><td><?= number_format($statistics['lowestPrincipal'], 2) ?></td>
+               <th scope="row">Average Returns Less Fees</th><td><?= number_format($statistics['averageReturn'], 2) ?></td>
+               <th scope="row">Lowest Account Value</th><td><?= number_format($statistics['lowestPrincipal'], 2) ?></td>
             </tr>
             <tr>
                <th scope="row">Annualized Return on Principal</th><td><?= number_format($statistics['actualAnnualizedYield'], 2) ?></td>
                <th scope="row">Annualized Return on Economic Output </th><td><?= number_format($statistics['totalAnnualizedYield'], 2) ?></td>
             </tr>
             <tr>
-               <th scope="row">Net Economic Output </th><td><?= number_format($statistics['finalNetValue'], 2) ?></td>
-               <th scope="row">Cumulative Withdrawals </th><td><?= number_format($statistics['earnedIncome'], 2) ?></td>
+               <th scope="row">Total Portfolio Return</th><td><?= number_format($statistics['finalNetValue'], 2) ?></td>
+               <th scope="row">Total Withdrawals</th><td><?= number_format($statistics['earnedIncome'], 2) ?></td>
             </tr>
             </tbody>
             </table>
@@ -356,11 +358,19 @@ $management_fee = $_REQUEST['Calculations']['management_fee'];
     $breakevenIndex=0;
     $breakevenIncome=[];
     $breakevenErrors=[];
+?>
 
+<hr />
+<div class="card bg-light mb-3">
+  <div class="card-body">
+<?php
 
 doTheMath($calculation, $showMarketHistory, $marketHistory);
 
-
+?>
+  </div>
+</div>
+<?php
 
 
 

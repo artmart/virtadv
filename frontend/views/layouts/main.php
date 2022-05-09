@@ -69,6 +69,7 @@ AppAsset::register($this);
     ]);
     NavBar::end();
     ?>
+    <div class="top"></div>
 </header>
 
 <main role="main" class="flex-shrink-0">
@@ -83,9 +84,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="float-left">Copyright &copy; <?= date('Y') ?> Wealth Pilots™ LLC. & Triple Threat Simulator™ All Rights Reserved </p>
         <?php // Html::encode(Yii::$app->name) ?> <?php // date('Y') ?>
-        
-        
-        
+
         <?php /* <p class="float-right"><?= Yii::powered() ?></p> */ ?>
     </div>
 </footer>

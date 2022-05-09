@@ -23,9 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 <h4 class="float-left">Recent Activity</h4>
-<table class="table table-striped table-success table-responsive-xl">
+<table class="table table-striped table-responsive-xl">
   <thead>
-    <tr>
+    <tr class="table-success">
       <th scope="col">Name</th>
       <th scope="col">Date</th>
     </tr>
@@ -78,5 +78,5 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <hr />
 <p class="d-flex justify-content-center">
-    <?= Html::a('New Calculation', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::a('New Calculation', ['create'], ['class' => 'btn btn-green']) ?>
 </p>

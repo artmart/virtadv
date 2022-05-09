@@ -1,12 +1,12 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
-/* @var $this yii\web\View */
-/* @var $model frontend\models\Calculations */
-/* @var $form yii\widgets\ActiveForm */
 ?>
+
+<div class="card bg-light mb-3">
+  <div class="card-body">
+
+
 
 <div class="calculations-form">
 
@@ -41,14 +41,26 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
         <div class="form-group">
-            <?= Html::submitButton('CALCULATE', ['class' => 'btn btn-green', 'onClick'=>'calculate()']) ?>
+            <?= Html::submitButton('CALCULATE', ['class' => 'btn btn-green w-100', 'onClick'=>'calculate()']) ?>
         </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
         <div class="form-group">
-            <?= Html::submitButton('Save', ['class' => 'btn btn-green', 'onClick'=>'save()']) ?>
+            <?= Html::submitButton('Save', ['class' => 'btn btn-green w-100', 'onClick'=>'save()']) ?>
+        </div>
+        </div>
+        
+        <div class="col-md-3">
+        <div class="form-group">
+            <?= Html::submitButton('Demo', ['class' => 'btn btn-green w-100', 'onClick'=>'demo()']) ?>
+        </div>
+        </div>
+        
+        <div class="col-md-3">
+        <div class="form-group">
+            <?= Html::submitButton('S&P 500', ['class' => 'btn btn-green w-100', 'onClick'=>'sandp()']) ?>
         </div>
         </div>
         
@@ -61,13 +73,21 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
-<hr />
+
+  </div>
+</div>
+
+
+
+
+  
 <div id="wait" style="display:none; z-index: 1000;" class="justify-content-center align-items-center"><img src='/img/ajaxloader.gif'/> Loading...</div>
-<div class="row"><div id="results" style="width: 100%;"></div></div>
+<div class="row1"><div id="results" style="width: 100%;"></div></div>
 
 
 <script>
 document.getElementById("w0").addEventListener("click", function(event){event.preventDefault()});
+$('form#w0').submit(false);
 function save(){$('form#w0').submit();}
 
 function calculate(){
@@ -89,6 +109,25 @@ function calculate(){
             // window.location.href = "/";
 		}
     }); 
+}
+
+
+function demo(){
+    
+    $('#calculations-reference_id').val('demo');
+    
+    $('#calculations-current_value').val(100000);
+    $('#calculations-years_of_investment').val(10);
+    $('#calculations-annual_return_rate').val(5);
+    $('#calculations-annual_withdrawal').val(4000);
+    $('#calculations-management_fee').val(1);
+    
+    calculate();
+    
+}
+
+function sandp(){
+    alert('OK');
 }
 
 

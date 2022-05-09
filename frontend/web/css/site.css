@@ -1,19 +1,29 @@
+/*
 @font-face {
   font-family: AvenirNextLTProLight ;
   src: url(sansation_light.woff);
 }
-
+*/
 main > .container {
     padding: 70px 15px 20px;
-	font-family: AvenirNextLTProLight;
+	font-family: Arial, sans-serif;
 }
 
+.top {
+    background: url(/img/top.png) no-repeat center 40px fixed;
+	height: 80px;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: -50px;
+}
+
+
 body{
-	font-family: AvenirNextLTProLight;
+	font-family: Arial, sans-serif;
 }
 
 .footer {
-    background-color: #80AE4F;
+    background-color: rgba(128,174,79,1);
     font-size: .9em;
     height: 60px;
 	color: white !important;
@@ -113,7 +123,7 @@ a.desc:after {
 }
 
 .btn-green{
-	background-color: #80AE4F !important;
+	background-color: rgba(128,174,79,1) !important;
 }
 
 .navbar-light{
@@ -137,9 +147,22 @@ a.desc:after {
 
 .dropdown-toggle{
 border-radius: 50%;
-background-color: #80AE4F;
+background-color: rgba(128,174,79,1);
 }
 
 .dropdown-toggle::after {
     content: none;
+}
+
+.table-success, .table-success > th, .table-success > td {
+  background-color: rgb(128, 174, 79);
+}
+
+a {
+  color: rgb(128, 174, 79);
+}
+
+.dropup, .dropright, .dropdown, .dropleft {
+  width: 50px;
+  text-align: center;
 }
