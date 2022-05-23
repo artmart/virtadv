@@ -1,15 +1,15 @@
 <?php
 
-namespace frontend\models;
+namespace backend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\Calculations;
+use backend\models\Sp500rates;
 
 /**
- * CalculationsSearch represents the model behind the search form of `frontend\models\Calculations`.
+ * Sp500ratesSearch represents the model behind the search form of `backend\models\Sp500rates`.
  */
-class CalculationsSearch extends Calculations
+class Sp500ratesSearch extends Sp500rates
 {
     /**
      * {@inheritdoc}
@@ -17,9 +17,8 @@ class CalculationsSearch extends Calculations
     public function rules()
     {
         return [
-            [['id', 'user_id', 'years_of_investment', 'annual_return_rate', 'market_history'], 'integer'],
-            [['reference_id'], 'safe'],
-            [['current_value', 'annual_withdrawal', 'management_fee'], 'number'],
+            [['id', 'year'], 'integer'],
+            [['rate'], 'number'],
         ];
     }
 
@@ -41,7 +40,7 @@ class CalculationsSearch extends Calculations
      */
     public function search($params)
     {
-        $query = Calculations::find();
+        $query = Sp500rates::find();
 
         // add conditions that should always apply here
 
@@ -60,16 +59,9 @@ class CalculationsSearch extends Calculations
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'current_value' => $this->current_value,
-            'years_of_investment' => $this->years_of_investment,
-            'annual_return_rate' => $this->annual_return_rate,
-            'annual_withdrawal' => $this->annual_withdrawal,
-            'management_fee' => $this->management_fee,
-            'market_history' => $this->market_history,
+            'year' => $this->year,
+            'rate' => $this->rate,
         ]);
-
-        $query->andFilterWhere(['like', 'reference_id', $this->reference_id]);
 
         return $dataProvider;
     }

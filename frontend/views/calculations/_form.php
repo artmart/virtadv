@@ -15,6 +15,9 @@ use yii\widgets\ActiveForm;
     <?php // $form->field($model, 'user_id')->textInput() 
     if($model->isNewRecord){$user_id = Yii::$app->user->id;}else{$user_id = $model->user_id;}
     echo $form->field($model, 'user_id')->hiddenInput(['value'=>$user_id])->label(false); 
+    
+    echo $form->field($model, 'market_history')->hiddenInput(['value'=>0])->label(false); 
+    
     ?>
 <div class="row">
 <div class="col-md-12"> 
@@ -127,7 +130,9 @@ function demo(){
 }
 
 function sandp(){
-    alert('OK');
+    $('#calculations-market_history').val(1); 
+    calculate();
+    $('#calculations-market_history').val(0); 
 }
 
 

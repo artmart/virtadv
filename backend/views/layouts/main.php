@@ -33,6 +33,8 @@ AppAsset::register($this);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site']],
         ['label' => 'Users', 'url' => ['/user']],
+        ['label' => 'S&P 500 Rates', 'url' => ['/sp500rates']],
+        
         
         /*
         ['label' => 'Manage',

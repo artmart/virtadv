@@ -12,6 +12,7 @@ th {
 
 <?php
 function calculateMarketHistory($calculation, $years){
+    $table2JsonData = [];
     //reset worth to original income so we can subtract freely
     $total['worth'] = $calculation['value'];
     $total['remaining'] = $calculation['value'];
@@ -27,43 +28,104 @@ function calculateMarketHistory($calculation, $years){
     $statistics['lowestPrincipal'] = $calculation['value'];
     
     // iterate over years, workout monthly math and reduce total worth
+        
+   // var_dump($years);
+   // exit;
+    
     foreach($years as $index=>$year){
       $year['geometricAverage'] = (1 + ($year['return'] / 100));
       $statistics['earnedIncome'] += ($years[($index == 0 ? 0 : $index -1)]['eoy'] < $years[($index == 0 ? 0 : $index -1)]['income'] ? $years[($index == 0 ? 0 : $index -1)]['eoy'] : $year['income']);
-      $year['charges'] = null;
-      $year['fees'] = null;
-      $year['boy'] = null;
-      $year['eoy'] = null;
+      $year['charges'] = 0;
+      $year['fees'] = 0;
+      $year['boy'] = 0;
+      $year['eoy'] = 0;
       $year['toggled'] = false;
     
       // calculate statistics
       $statistics['averageReturn'] += $year['return'];
       $statistics['geometricAverage'] *= $year['geometricAverage'];
-    
-      foreach($year['months'] as $month){
+      
+      
+      
+      //////////////////////////////////////////////////////
+      //dynamic monthly values
+      /*
+      $fees = 0;
+          for($j = 1; $j<13; $j++){
+            $month = [];
+            $calculatedValue = ((1 + $year['return'] / 12 / 100) * $total['worth']) - $year['income'] / 12;
+            $charge = $calculation['fee'] / 12 / 100 * $calculatedValue;
+            $globalFee = $calculation['fee'] / 12 / 100;
+            $remaining = ($calculatedValue - ($globalFee * $calculatedValue) < 0 ? 0 : $calculatedValue - ($globalFee * $calculatedValue));
+            $monthlyCharge = $globalFee * $calculatedValue;
+
+            $month['month'] = $j;
+            $month['income'] = $year['income'] / 12;
+            $month['fee'] = $globalFee;
+            $month['interest'] = $year['return'] / 12 / 100;
+            $month['rate'] = $year['return'] / 12 / 100;
+            $month['value'] = $calculatedValue;
+            $month['charge'] = ($monthlyCharge < 0 ? 0 : $monthlyCharge);
+            $month['remaining'] = $remaining;
+
+            $fees += $month['charge'];
+
+            //$month['previousRemaining'] = $previousRemaining;
+            $month['fees'] = $fees;
+            $statistics['lowestPrincipal'] = ($remaining < $statistics['lowestPrincipal'] ? $remaining : $statistics['lowestPrincipal']);
+            if($statistics['lowestPrincipal']< 0){
+              $statistics['lowestPrincipal'] = 0;
+            }
+            $total['worth'] = $remaining;
+            $total['remaining'] -= $remaining;
+            //$previousRemaining = $month['remaining'];
+
+            $year['months'][] = $month; // .push(month)
+            
+          }
+          $years[$index] = $year;
+          
+          */
+          
+          
+          
+    ////////////////////////////////////////////////////////////////////////////////
+      
+      //var_dump($year['return']);
+
+      //foreach($year['months'] as $month){
+        for($j = 1; $j<13; $j++){
+            $month = [];
+        
+        $month['rate'] = $year['return'] / 12;
+        
         $calculatedValue = ((1 + $month['rate'] / 100) * $total['worth']) - $year['income'] / 12;
         $charge = $month['rate'] / 100 * $calculatedValue;
         $globalFee = $calculation['fee'] / 12 / 100;
         $remaining = $calculatedValue - ($globalFee * $calculatedValue);
         $monthlyCharge = $globalFee * $calculatedValue;
+        $month['month'] = $j;
         $month['income'] = $year['income'] / 12;
         $month['fee'] = $globalFee;
         $month['value'] = $calculatedValue;
         $month['charge'] = ($monthlyCharge < 0 ? 0 : $monthlyCharge);
-        $month['remaining'] = remaining;
+        $month['remaining'] = $remaining;
         $statistics['lowestPrincipal'] = ($remaining < $statistics['lowestPrincipal'] ? $remaining : $statistics['lowestPrincipal']);
         if($statistics['lowestPrincipal'] < 0) {
           $statistics['lowestPrincipal'] = 0;
         }
         $total['worth'] = $remaining;
         $total['remaining'] -= $remaining;
-        $year['charges'] += floatval($month['charge'], 4);
+        
+        $year['charges'] += floatval($month['charge']);
+        $year['months'][] = $month;
       }
+      $years[$index] = $year;
     
-      $year['boy'] = $years[$index - 1] ? $years[$index - 1][$months[11]['remaining']] : $calculation['value']; //????
-      $year['v'] += $year['charges'] + ($years[$index - 1] ? $years[$index - 1]['fees'] : null);
+      $year['boy'] = ($index>0 && $years[$index - 1]) ? $years[$index - 1]['months'][11]['remaining'] : $calculation['value']; //????
+      $year['fees'] += $year['charges'] + (($index>0 && $years[$index - 1]) ? $years[$index - 1]['fees'] : null);
       // last iteration will assign final net value
-      $year['eoy'] = $statistics['actualAnnualizedYield'] = $years[$index][$months[11]['remaining']]; //???????
+      $year['eoy'] = $statistics['actualAnnualizedYield'] = $years[$index]['months'][11]['remaining']; //???????
     
       $statistics['totalAnnualizedYield'] = $year['eoy'];
       $statistics['finalNetValue'] = $year['eoy'];
@@ -71,9 +133,14 @@ function calculateMarketHistory($calculation, $years){
       if($year['eoy']<0){$year['eoy'] = $statistics['actualAnnualizedYield'] = 0;}
     
       if($year['boy']<0){$year['boy'] = 0;}
+      
+      
+      $table2JsonData[] = [$year['year'], $year['return'].'%', '$'.number_format($year['income']), '$'.number_format($year['charges'], 2), '$'.number_format($year['boy'], 2), '$'.number_format($year['eoy'], 2), '$'.number_format($year['fees'], 2)]; 
+                        
+
     }
-    
-    calculateStatistics($statistics, $calculation);
+
+    calculateStatistics($statistics, $calculation, $table2JsonData);
 }
       
      function calculateMonths($calculation, $years) {
@@ -175,50 +242,17 @@ function calculateMarketHistory($calculation, $years){
           $statistics['finalNetValue'] = $year['eoy'];
         }
 
-        calculateStatistics($statistics, $calculation);
+        calculateStatistics($statistics, $calculation, $table2JsonData);
         //return $table2JsonData;
         
     ?>    
         
-<div class="table-responsive">
-    <table id="calculations" class="table table-sm table-hover table-striped display" style="width: 100% !important;">
-        <thead>
-        <tr>
-          <th scope="col">Year</th>
-          <th scope="col">Annual Return</th>
-          <th scope="col">Annual Withdrawal</th>
-          <th scope="col">Mgmt. Fee</th>
-          <th scope="col">Net Value BOY</th>
-          <th scope="col">Net Value EOY</th>
-          <th scope="col">Cumulative Fees </th>
-        </tr>
-        </thead>
-    <tbody>
-    </tbody>
-    </table>
-</div>
 
-<script>
-$(document).ready(function(){
-    $('#calculations').DataTable({
-        data: <?php echo json_encode($table2JsonData); ?>,
-        responsive: true,
-        "ordering": false,
-        "paging": false,
-        "searching": false,
-        "info": false,
-        //"processing": true,
-        //"serverSide": true,
-       // "ajax": "/site/homechartajax"
-    });
-} );
-
-</script>
    
 <?php    
       }
       
-     function calculateStatistics($statistics, $calculation){
+     function calculateStatistics($statistics, $calculation, $table2JsonData){
         $statistics['averageReturn'] = $statistics['averageReturn'] / $calculation['years'];
         // javascript does not support "y square root of x", but supports a second argument in "x to the power of y"
         $statistics['geometricAverage'] = (pow($statistics['geometricAverage'], (1 / $calculation['years'])) - 1) * 100;
@@ -246,6 +280,41 @@ $(document).ready(function(){
             </table>
         </div>
         
+        <div class="table-responsive">
+            <table id="calculations" class="table table-sm table-hover table-striped display" style="width: 100% !important;">
+                <thead>
+                <tr>
+                  <th scope="col">Year</th>
+                  <th scope="col">Annual Return</th>
+                  <th scope="col">Annual Withdrawal</th>
+                  <th scope="col">Mgmt. Fee</th>
+                  <th scope="col">Net Value BOY</th>
+                  <th scope="col">Net Value EOY</th>
+                  <th scope="col">Cumulative Fees </th>
+                </tr>
+                </thead>
+            <tbody>
+            </tbody>
+            </table>
+        </div>
+        
+        <script>
+        $(document).ready(function(){
+            $('#calculations').DataTable({
+                data: <?php echo json_encode($table2JsonData); ?>,
+                responsive: true,
+                "ordering": false,
+                "paging": false,
+                "searching": false,
+                "info": false,
+                //"processing": true,
+                //"serverSide": true,
+               // "ajax": "/site/homechartajax"
+            });
+        } );
+        
+        </script>
+        
         <?php
         
         
@@ -263,6 +332,7 @@ $(document).ready(function(){
         $currentYear =  date("Y"); // new Date().getFullYear()
         $yearsRange = $calculation['years'];
 
+/*
         if($showMarketHistory){
           $currentYear = $marketHistory['from'];
 
@@ -274,10 +344,10 @@ $(document).ready(function(){
             $marketHistory['to'] = $marketHistory['from'];
           }
 
-          $yearsRange = $marketHistory[to] - $marketHistory['from'];
+          $yearsRange = $marketHistory['to'] - $marketHistory['from'];
           $calculation['years'] = $yearsRange;
         }
-
+*/
         // TODO - detect existing value and don't overwrite
 
         if(!$showMarketHistory){
@@ -305,33 +375,70 @@ $(document).ready(function(){
           calculateMonths($calculation, $years);
         }
 
-/*
+
         if($showMarketHistory){
-          fetch('/rates')
-          .then(response => response.json())
-          .then(data => {
-            this.years = []
-            data.forEach(year => {
-              if (year['year'] < this.marketHistory.from) {
-                return
-              }
+          
+          //$data =  \backend\models\Sp500rates::find();
+          //$from = 2000;
+          $to = $currentYear+$yearsRange;
+          
+          
+         $data = Yii::$app->getDb()->createCommand("select * from sp500_rates  order by year")->queryAll(); //where year>=$currentYear AND year<=$to 
+         //$cnt = count($pages); 
+          
+          //var_dump($data);
+          //exit;
+            $years = [];
+            foreach($data as $year){
+                
+               // var_dump($year);
+         // exit;
+             // if ($year['year'] < $marketHistory['from']) {
+              //  return
+             // }
 
-              if (year['year'] >= this.marketHistory.to) {
-                return
-              }
+             // if ($year['year'] >= $marketHistory['to']) {
+             //   return
+            //  }
 
-              year.return *= 100
-              year.income = this.calculation.income
-              this.years.push(year)
-            })
-            this.calculateMarketHistory()
-          })
+
+            $year['toggled'] = false;
+            
+            $year['boy'] = 0;
+            
+
+            
+            
+            $year['geometricAverage'] = 0;
+            $year['charges'] = 0;
+            $year['fees'] = 0;
+
+
+              
+              $year['return'] = $year['rate']*100;
+              $year['income'] = $calculation['income'];
+              
+              $year['eoy'] = 0;
+              $year['months'] = [];
+              
+              
+              $years[] = $year; //his.years.push(year)
+              
+              
+              
+            }
+            
+            //var_dump($data);
+            //exit;
+           //  calculateMonths($calculation, $years);
+            calculateMarketHistory($calculation, $years);
+          }
         }
-*/        
         
         
         
-      }
+        
+
       
       
       
@@ -342,8 +449,10 @@ $annual_return_rate = $_REQUEST['Calculations']['annual_return_rate'];
 $annual_withdrawal = $_REQUEST['Calculations']['annual_withdrawal'];
 $management_fee = $_REQUEST['Calculations']['management_fee'];
 
+$market_history = $_REQUEST['Calculations']['market_history'];
+
     $loading = false; 
-    $showMarketHistory = false; 
+    $showMarketHistory = $market_history; 
     $showBreakeven = false;
     $marketHistory=['from'=>2000, 'to'=>0];
     $total = ['worth'=>null, 'remaining'=>null];
@@ -358,6 +467,9 @@ $management_fee = $_REQUEST['Calculations']['management_fee'];
     $breakevenIndex=0;
     $breakevenIncome=[];
     $breakevenErrors=[];
+    
+    //var_dump($_REQUEST);
+    //exit;
 ?>
 
 <hr />
@@ -534,17 +646,6 @@ for($y = $current_rear; $y<$current_rear+$years_of_investment; $y++){
     //}
     
    //$cagr  = ( $net_value_eoy[$i] /$net_value_eoy[$i-1] ) ^ (1/$years_of_investment) - 1;
-    
-    
-    
-    
-    
-    
-    
-    
-   
-    
-    
     
     
     
