@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\models;
 
 use Yii;
@@ -8,7 +9,19 @@ use Yii;
  *
  * @property int $id
  * @property int|null $year
- * @property float|null $rate
+ * @property float|null $return
+ * @property float $january
+ * @property float $february
+ * @property float $march
+ * @property float $april
+ * @property float $may
+ * @property float $june
+ * @property float $july
+ * @property float $august
+ * @property float $september
+ * @property float $october
+ * @property float $november
+ * @property float $december
  */
 class Sp500rates extends \yii\db\ActiveRecord
 {
@@ -27,7 +40,7 @@ class Sp500rates extends \yii\db\ActiveRecord
     {
         return [
             [['year'], 'integer'],
-            [['rate'], 'number'],
+            [['return', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'], 'number'],
             [['year'], 'unique'],
         ];
     }
@@ -40,7 +53,19 @@ class Sp500rates extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'year' => 'Year',
-            'rate' => 'Rate',
+            'return' => 'Return',
+            'january' => 'January',
+            'february' => 'February',
+            'march' => 'March',
+            'april' => 'April',
+            'may' => 'May',
+            'june' => 'June',
+            'july' => 'July',
+            'august' => 'August',
+            'september' => 'September',
+            'october' => 'October',
+            'november' => 'November',
+            'december' => 'December',
         ];
     }
 }

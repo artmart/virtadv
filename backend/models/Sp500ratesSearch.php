@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\models;
 
 use yii\base\Model;
@@ -17,7 +18,7 @@ class Sp500ratesSearch extends Sp500rates
     {
         return [
             [['id', 'year'], 'integer'],
-            [['rate'], 'number'],
+            [['return', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'], 'number'],
         ];
     }
 
@@ -59,7 +60,19 @@ class Sp500ratesSearch extends Sp500rates
         $query->andFilterWhere([
             'id' => $this->id,
             'year' => $this->year,
-            'rate' => $this->rate,
+            'return' => $this->return,
+            'january' => $this->january,
+            'february' => $this->february,
+            'march' => $this->march,
+            'april' => $this->april,
+            'may' => $this->may,
+            'june' => $this->june,
+            'july' => $this->july,
+            'august' => $this->august,
+            'september' => $this->september,
+            'october' => $this->october,
+            'november' => $this->november,
+            'december' => $this->december,
         ]);
 
         return $dataProvider;

@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -13,9 +12,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="sp500rates-index">
 <div class="row">
-    <h1 class="col-sm-10"><?= Html::encode($this->title) ?></h1>
-    <p class="col-sm-2 d-flex justify-content-end">
-        <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i>  Add', ['create'], ['class' => 'btn btn-success']) ?>
+    <h1 class="col-sm-9"><?= Html::encode($this->title) ?></h1>
+    <p class="col-sm-3 d-flex justify-content-end">
+        <?= Html::a('<i class="fa fa-plus" aria-hidden="true"></i> Add S&P 500 rates', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 </div>
 <hr />
@@ -30,7 +29,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'year',
-            'rate',
+            'return',
+            //'january',
+            //'february',
+            //'march',
+            //'april',
+            //'may',
+            //'june',
+            //'july',
+            //'august',
+            //'september',
+            //'october',
+            //'november',
+            //'december',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Sp500rates $model, $key, $index, $column) {

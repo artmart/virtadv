@@ -36,8 +36,8 @@ class Calculations extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'reference_id', 'date'], 'required'],
-            [['user_id', 'years_of_investment', 'annual_return_rate', 'market_history'], 'integer'],
-            [['current_value', 'annual_withdrawal', 'management_fee'], 'number'],
+            [['user_id', 'years_of_investment',  'market_history'], 'integer'],
+            [['current_value', 'annual_withdrawal', 'management_fee', 'annual_return_rate'], 'number'],
             [['reference_id'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];

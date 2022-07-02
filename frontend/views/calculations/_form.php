@@ -12,7 +12,13 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?php // $form->field($model, 'user_id')->textInput() 
+<?php 
+    $years = "<option value=''>-- Select --</option>"; 
+    for($c=2000; $c<=2022; $c++){
+        $years .= '<option value='.$c.' selected="selected">'.$c.'</option>';
+    }
+
+    // $form->field($model, 'user_id')->textInput() 
     if($model->isNewRecord){$user_id = Yii::$app->user->id;}else{$user_id = $model->user_id;}
     echo $form->field($model, 'user_id')->hiddenInput(['value'=>$user_id])->label(false); 
     
@@ -68,13 +74,32 @@ use yii\widgets\ActiveForm;
         </div>
         
     </div>
+
+<div class="card bg-light mb-3" id="years">
+  <div class="card-body">
+    <div class="row">
+    <div class="col-md-6">Historical S&P 500 Return</div>
+    <div class="form-group row col-md-6">
+        <div class="col-md-2">From</div>
+        <div class="col-md-4"> 
+            <select class="form-control" name="from" id="from" onchange ="sandp()">
+              <?php echo $years; ?>
+            </select>
+        </div>
+        <div class="control-label col-sm-2">To</div>
+        <div class="col-md-4">
+            <select class="form-control" name="to" id="to" onchange ="sandp()">
+              <?php echo $years; ?>
+            </select>
+        </div>
+    </div>
+    </div>
 </div>
-
-
-
+</div>    
+     
+</div>
 </div>
     <?php ActiveForm::end(); ?>
-
 </div>
 
   </div>
@@ -89,6 +114,8 @@ use yii\widgets\ActiveForm;
 
 
 <script>
+$('#years').hide(); 
+
 document.getElementById("w0").addEventListener("click", function(event){event.preventDefault()});
 $('form#w0').submit(false);
 function save(){$('form#w0').submit();}
@@ -130,10 +157,17 @@ function demo(){
 }
 
 function sandp(){
+    $('#years').show();
     $('#calculations-market_history').val(1); 
     calculate();
     $('#calculations-market_history').val(0); 
 }
+
+function sandp1(){
+    $('#years').show(); 
+    //$('#years').val(0); 
+}
+
 
 
 </script>

@@ -7,7 +7,6 @@ use backend\models\Sp500ratesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
  * Sp500ratesController implements the CRUD actions for Sp500rates model.
@@ -22,17 +21,6 @@ class Sp500ratesController extends Controller
         return array_merge(
             parent::behaviors(),
             [
-                'access' => [
-                    'class' => AccessControl::className(),
-                    //'only' => ['logout', 'signup', 'index'],
-                    'rules' => [
-                        [
-                            'actions' => ['create', 'update', 'view', 'delete', 'index'],
-                            'allow' => true,
-                            'roles' => ['@'],
-                        ],
-                    ],
-                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -49,7 +37,7 @@ class Sp500ratesController extends Controller
      * @return string
      */
     public function actionIndex()
-    {
+    {   ini_set("precision", 18);
         $searchModel = new Sp500ratesSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
@@ -66,7 +54,7 @@ class Sp500ratesController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {
+    {   ini_set("precision", 20);
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -80,7 +68,7 @@ class Sp500ratesController extends Controller
     public function actionCreate()
     {
         $model = new Sp500rates();
-
+        ini_set("precision", 20); 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -104,7 +92,7 @@ class Sp500ratesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        ini_set("precision", 20); 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
