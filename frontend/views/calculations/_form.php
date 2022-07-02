@@ -158,6 +158,11 @@ function demo(){
 
 function sandp(){
     $('#years').show();
+    var years  = $('#to').val() - $('#from').val();
+    if(years>0){
+    
+    $('#calculations-years_of_investment').val(years);
+    }
     $('#calculations-market_history').val(1); 
     calculate();
     $('#calculations-market_history').val(0); 
@@ -166,6 +171,9 @@ function sandp(){
 function sandp1(){
     $('#years').show(); 
     //$('#years').val(0); 
+    var years  = $('#to').val() - $('#from').val();
+    $('#calculations-years_of_investment').val(years);
+    
 }
 
 
