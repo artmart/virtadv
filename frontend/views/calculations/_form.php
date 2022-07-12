@@ -13,9 +13,17 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
 <?php 
+$sql = "select * from sp500_rates r order by year"; 
+
+      //WHERE `RETURN`<>0 AND january<>0 AND february<>0 AND march<>0 AND april<>0 AND may<>0 AND june<>0 
+        //        AND july<>0 AND august<>0 AND september<>0 AND october<>0 AND november<>0 AND december<>0
+
+         $data = Yii::$app->getDb()->createCommand($sql)->queryAll();
+
     $years = "<option value=''>-- Select --</option>"; 
-    for($c=2000; $c<=2022; $c++){
-        $years .= '<option value='.$c.' selected="selected">'.$c.'</option>';
+    foreach($data as $y){
+    //for($c=2000; $c<=2022; $c++){
+        $years .= '<option value='.$y['year'].' selected="selected">'.$y['year'].'</option>';
     }
 
     // $form->field($model, 'user_id')->textInput() 

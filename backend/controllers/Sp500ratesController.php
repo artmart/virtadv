@@ -68,7 +68,7 @@ class Sp500ratesController extends Controller
     public function actionCreate()
     {
         $model = new Sp500rates();
-        ini_set("precision", 20); 
+        ini_set("precision", 16); 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -92,7 +92,7 @@ class Sp500ratesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        ini_set("precision", 20); 
+        ini_set("precision", 16); 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
